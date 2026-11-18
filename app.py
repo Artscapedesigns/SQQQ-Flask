@@ -1,19 +1,30 @@
 from flask import Flask, request, jsonify
+import requests
+import time
 
 app = Flask(__name__)
 
-@app.route('/backtest', methods=['POST'])
+@app.route("/backtest", methods= )
 def backtest():
     data = request.get_json()
-    
-    if not data:
-        return jsonify({'error': 'No JSON data received'}), 400
-    
-    # Example: just echo back what was sent (replace with real logic)
-    return jsonify({
-        'message': 'Backtest received',
-        'received_data': data
-    })
+    symbol = data.get("symbol", "QQQ")
+    try:
+        url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
+        headers = {"User-Agent": "Mozilla/5.0"}
+        r = requests.get(url, headers=headers, timeout=10)
+        result = r.json()
+        meta = result  [0] price = meta.get("regularMarketPrice")
+        bid = meta.get("bid", price)
+        ask = meta.get("ask", price)
+        return jsonbify({
+            "symbol": symbol,
+            "price": price,
+            "bid": bid,
+            "ask": ask,
+            "timestamp": int(time.time())
+        })
+    except Exception as e:
+        return jsonbify({"error": str(e)}), 500
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
