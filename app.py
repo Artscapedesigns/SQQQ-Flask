@@ -9,8 +9,7 @@ def backtest():
     data = request.get_json()
     symbol = data.get("symbol", "QQQ")
     try:
-    url = "https://query1.finance.yahoo.com/v8/finance/chart/" + symbol   
- https://query1.finance.yahoo.com/v8/finance/chart/" + symbol
+        url = "https://query1.finance.yahoo.com/v8/finance/chart/" + symbol
         headers = {"User-Agent": "Mozilla/5.0"}
         r = requests.get(url, headers=headers, timeout=10)
         result = r.json()
