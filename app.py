@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, json
 import requests
 import time
 
@@ -9,14 +9,15 @@ def backtest():
     data = request.get_json()
     symbol = data.get("symbol", "QQQ")
     try:
-        url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
+    url = "https://query1.finance.yahoo.com/v8/finance/chart/" + symbol   
+ https://query1.finance.yahoo.com/v8/finance/chart/" + symbol
         headers = {"User-Agent": "Mozilla/5.0"}
         r = requests.get(url, headers=headers, timeout=10)
         result = r.json()
         meta = result  [0] price = meta.get("regularMarketPrice")
         bid = meta.get("bid", price)
         ask = meta.get("ask", price)
-        return jsonbify({
+        return json.dumps({
             "symbol": symbol,
             "price": price,
             "bid": bid,
@@ -24,7 +25,7 @@ def backtest():
             "timestamp": int(time.time())
         })
     except Exception as e:
-        return jsonbify({"error": str(e)}), 500
+        return json.dumps({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
